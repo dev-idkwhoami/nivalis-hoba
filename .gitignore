@@ -1,0 +1,10 @@
+bin/
+obj/
+.tools/
+**/bin/
+**/obj/
+*.user
+*.suo
+*.core
+core
+.DS_Store

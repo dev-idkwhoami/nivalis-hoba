@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Nivalis.Hoba</AssemblyName>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Nivalis.ModCompanion" HintPath="../dependencies/Nivalis.ModCompanion.dll" Private="false" />
+    <Reference Include="0Harmony" HintPath="$(GamePath)/BepInEx/core/0Harmony.dll" Private="false" />
+    <Reference Include="BepInEx.Core" HintPath="$(GamePath)/BepInEx/core/BepInEx.Core.dll" Private="false" />
+    <Reference Include="BepInEx.Unity.IL2CPP" HintPath="$(GamePath)/BepInEx/core/BepInEx.Unity.IL2CPP.dll" Private="false" />
+    <Reference Include="Il2CppInterop.Runtime" HintPath="$(GamePath)/BepInEx/core/Il2CppInterop.Runtime.dll" Private="false" />
+    <Reference Include="$(GamePath)/BepInEx/interop/*.dll" Private="false" />
+  </ItemGroup>
+  <ItemGroup><EmbeddedResource Include="../assets/hoba-icon.png" LogicalName="Hoba.BoardIcon.png" /></ItemGroup>
+  <Target Name="CheckGameReferences" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(GamePath)/BepInEx/interop/Assembly-CSharp.dll')" Text="Set GamePath to a BepInEx IL2CPP installation of Nivalis Nights." />
+  </Target>
+  <ItemGroup><EmbeddedResource Include="../assets/models/*-icon.png" LogicalName="Hoba.Icons.%(Filename)%(Extension)" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="../assets/legendary-compass.png" LogicalName="Hoba.LegendaryCompass.png" /></ItemGroup>
+</Project>
