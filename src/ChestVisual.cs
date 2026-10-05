@@ -19,7 +19,7 @@ internal sealed class ChestVisual : IDisposable
         try
         {
             if (placement.Model != "Carboard_Box_Light_C_Open") throw new InvalidDataException("Unsupported chest model.");
-            var data = NativeChestAsset.Read(Application.dataPath);
+            var data = NativeChestAsset.Read(Application.dataPath, message => Plugin.Logger.LogWarning(message));
             var shift = new Vector3(placement.MeshOffset[0], placement.MeshOffset[1], placement.MeshOffset[2]);
             _mesh = new Mesh { name = placement.Model };
             _mesh.vertices = new Il2CppStructArray<Vector3>(data.Vertices.Select(p => new Vector3(p.X, p.Y, p.Z) + shift).ToArray());

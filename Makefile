@@ -10,7 +10,7 @@ export NUGET_PACKAGES ?= $(CURDIR)/.tools/nuget
 
 .PHONY: help check-sdk check-game check-dependencies build test model catalog install package clean
 help:
-	@printf '%s\n' 'make build GAME_PATH="..."  Build HOBA against an initialized BepInEx game' 'make test                   Run managed checks without the game' 'make model                  Export base OBJ/MTL geometry' 'make catalog                Export model catalogue OBJ/MTL geometry' 'make package GAME_PATH="..." Build, test and package both DLLs' 'make install GAME_PATH="..." Build, test and install both DLLs' 'make clean                  Remove build output' 'Overrides: DOTNET=/path/to/dotnet CONFIGURATION=Release'
+	@printf '%s\n' 'make build GAME_PATH="..."  Build HOBA against an initialized BepInEx game' 'make test                   Run managed checks without the game' 'make model                  Export base OBJ/MTL geometry' 'make catalog                Export model catalogue OBJ/MTL geometry' 'make package GAME_PATH="..." Build, test and package plugin dependencies' 'make install GAME_PATH="..." Build, test and install plugin dependencies' 'make clean                  Remove build output' 'Overrides: DOTNET=/path/to/dotnet CONFIGURATION=Release'
 check-sdk:
 	@command -v "$$DOTNET" >/dev/null 2>&1 || { echo '.NET SDK 8 or newer is required; set DOTNET if not on PATH.' >&2; exit 1; }
 check-game:

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>Nivalis.Hoba</AssemblyName>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Nivalis.ModCompanion" HintPath="../dependencies/Nivalis.ModCompanion.dll" Private="false" />
@@ -17,4 +17,8 @@
   </Target>
   <ItemGroup><EmbeddedResource Include="../assets/models/*-icon.png" LogicalName="Hoba.Icons.%(Filename)%(Extension)" /></ItemGroup>
   <ItemGroup><EmbeddedResource Include="../assets/legendary-compass.png" LogicalName="Hoba.LegendaryCompass.png" /></ItemGroup>
+  <ItemGroup>
+    <Reference Include="AssetsTools.NET" HintPath="../dependencies/AssetsTools.NET.dll" />
+    <EmbeddedResource Include="../assets/unity-2020.3.44f1.cldb" LogicalName="Hoba.UnityClassDatabase" />
+  </ItemGroup>
 </Project>

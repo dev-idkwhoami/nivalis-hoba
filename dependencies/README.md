@@ -17,3 +17,12 @@ Bundled 1.0.3 matches the tagged release build prepared on 2026-10-05, including
 the independent settings window, input/rebinding and icon-lifetime fixes.
 Its exact bytes are identified by `SHA256SUMS`.
 Companion's build and 60 configuration checks pass.
+
+# AssetsTools.NET
+
+`AssetsTools.NET.dll` is pinned to **3.0.5**, using the netstandard2.0 DLL from
+NuGet's `assetstools.net/3.0.5` package. It has no additional runtime package
+dependencies. `SHA256SUMS` pins the DLL and its MIT license. Both are included in
+the install/archive. This reader is used only when HOBA's known chest ranges fail.
+See [native assets](../docs/native-assets.md) for the embedded Unity metadata's
+provenance and the fallback's compatibility limits.

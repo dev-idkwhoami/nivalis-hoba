@@ -443,7 +443,8 @@ ProductChecks.Run();
 
 if (args.Length == 2 && args[0] == "--check-game-assets")
 {
-    var native = NativeChestAsset.Read(args[1]);
+    var native = NativeChestAsset.ReadKnown(args[1]);
+    NativeChestChecks.Run(args[1]);
     Check(native.Triangles.Length == 276 && native.Vertices.Length > 0, "Native chest source indices resolve");
     var min = native.Vertices.Aggregate(System.Numerics.Vector3.Min);
     var max = native.Vertices.Aggregate(System.Numerics.Vector3.Max);

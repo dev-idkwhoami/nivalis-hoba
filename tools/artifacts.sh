@@ -12,14 +12,14 @@ dotnet="${DOTNET:-dotnet}"
 version="$("$dotnet" msbuild src/Hoba.csproj -nologo -getProperty:Version)"
 [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'Invalid project version' >&2; exit 1; }
 (cd dependencies && sha256sum --check SHA256SUMS)
-files=(bin/Nivalis.Hoba.dll dependencies/Nivalis.ModCompanion.dll)
+files=(bin/Nivalis.Hoba.dll dependencies/Nivalis.ModCompanion.dll dependencies/AssetsTools.NET.dll dependencies/AssetsTools.NET.LICENSE)
 for file in "${files[@]}"; do test -f "$file"; done
 if [[ "$action" == install ]]; then
     test -f "${GAME_PATH:?Set GAME_PATH}/BepInEx/interop/Assembly-CSharp.dll"
     for file in "${files[@]}"; do
         install -Dm644 "$file" "$GAME_PATH/BepInEx/plugins/$(basename "$file")"
     done
-    echo 'Installed HOBA and Mod Companion. Restart the game.'
+    echo 'Installed HOBA, Mod Companion and the asset reader. Restart the game.'
     exit
 fi
 mkdir -p bin
