@@ -3,7 +3,20 @@
 `BoardConfiguration.Load` binds all model, price and palette entries into the
 same `BepInEx/config/hoba.cfg` used by Companion. Missing entries are generated
 on startup. Restart after editing this catalogue: it is read before item database
-registration and model construction. Audio and discovery controls remain live.
+registration and model construction. Hotkey, audio and discovery controls remain live.
+
+## Quick-deploy hotkey
+
+Press **Q** to deploy and mount an owned board without opening the inventory.
+HOBA uses the last selected board during the current session, falling back to
+an available board in your inventory. An already deployed board stays where it is.
+
+In Mod Companion → HOBA → General, turn **Enable board hotkey** off to disable
+the shortcut; inventory use still works. The toggle defaults to on. Rebind
+**Take out board** in the Controls tab; the gamepad binding is initially empty.
+Both settings persist in `hoba.cfg` and take effect without restarting.
+The shortcut is suppressed during menus, loading and rebinding, and uses the
+same riding and inventory checks as deploying from the inventory.
 
 ## Ride profiles and board prices
 

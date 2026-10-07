@@ -68,6 +68,11 @@ public sealed class RideController : MonoBehaviour
                 return;
             }
             if (_resumeFrame == Time.frameCount || SprayTool.ConsumesInput || HiddenChests.HasSearchTarget) return;
+            if (CompanionSettings.TakeOutBoardPressed)
+            {
+                BoardItem.QuickUse(this);
+                return;
+            }
             if (Mouse.current?.leftButton.wasPressedThisFrame != true) return;
             if ((Keyboard.current?.leftShiftKey.isPressed == true || Keyboard.current?.rightShiftKey.isPressed == true) &&
                 (_motion != null || CanReachParked()))

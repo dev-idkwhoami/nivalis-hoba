@@ -183,6 +183,14 @@ internal static class BoardItem
     }
 
     internal static void CancelUse() { _useUntil = 0; _queuedId = null; }
+    internal static void QuickUse(RideController ride)
+    {
+        if (Type == null || Inventory == null || !HobaSave.Ready || HobaSave.RestorePending) return;
+        CancelUse();
+        SprayTool.Unequip();
+        ride.UseBoard();
+    }
+
     internal static void BeforeLoad(InventoriesManager manager)
     {
         CancelUse(); SprayTool.Unequip(); _selectedId = null; Deployed = null; _nextRecovery = 0;
