@@ -18,14 +18,14 @@ internal static class CompanionSettings
             new ModMetadata("HOBA", "dev_idkwhoami", Plugin.Version,
                 "Hoverboards, custom finishes and hidden legendary boards.",
                 Icon: ModIcon.FromResource(typeof(Plugin).Assembly, "Hoba.BoardIcon.png")), config);
-        _hotkeyEnabled = mod.AddCategory("General", "General").Toggle(
+        var general = mod.AddCategory("General", "General");
+        _hotkeyEnabled = general.Toggle(
             "EnableBoardHotkey", "Enable board hotkey", true,
             "Allow the Take out board binding to deploy and mount an owned board. Inventory use remains available when disabled.");
         _takeOutBoard = mod.Controls.AddInput("TakeOutBoard", "Take out board", "<Keyboard>/q");
         BoardFov.Configure(mod.AddCategory("Camera", "Camera"));
         BoardAudio.Configure(mod.AddCategory("Audio", "Audio"));
-        var discovery = mod.AddCategory("Discovery", "Discovery");
-        LegendaryCompass.Configure(discovery);
-        BoardCompass.Configure(discovery);
+        LegendaryCompass.Configure(general, config);
+        BoardCompass.Configure(general, config);
     }
 }

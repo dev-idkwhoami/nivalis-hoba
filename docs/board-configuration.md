@@ -18,6 +18,12 @@ Both settings persist in `hoba.cfg` and take effect without restarting.
 The shortcut is suppressed during menus, loading and rebinding, and uses the
 same riding and inventory checks as deploying from the inventory.
 
+## Compass settings
+
+The **Show legendaries on compass** and **Show parked HOBA on compass** toggles
+are displayed under **General** in Mod Companion. Their saved entries remain in
+`[Discovery]` in `hoba.cfg` to preserve existing preferences.
+
 ## Ride profiles and board prices
 
 Every design has a section: `Board.hoba-mk1` through `Board.hoba-mk3`,

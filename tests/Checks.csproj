@@ -8,7 +8,6 @@
   <ItemGroup>
     <Compile Include="../src/FieldDeformation.cs" Link="FieldDeformation.cs" />
     <Compile Include="../src/NativeChestAsset.cs" Link="NativeChestAsset.cs" />
-    <Compile Include="../src/NativeChestResolver.cs" Link="NativeChestResolver.cs" />
     <Compile Include="../src/SpeedFov.cs" Link="SpeedFov.cs" />
     <Compile Include="../src/BoardTuning.cs" Link="BoardTuning.cs" />
     <Compile Include="../src/WorldPlacements.cs" Link="WorldPlacements.cs" />
@@ -33,7 +32,6 @@
     <Compile Include="../src/ParkingSpot.cs" Link="ParkingSpot.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="AssetsTools.NET" HintPath="../dependencies/AssetsTools.NET.dll" />
-    <EmbeddedResource Include="../assets/unity-2020.3.44f1.cldb" LogicalName="Hoba.UnityClassDatabase" />
+    <EmbeddedResource Include="../assets/hidden-chest.bin" LogicalName="Hoba.HiddenChest" />
   </ItemGroup>
 </Project>

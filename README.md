@@ -12,9 +12,9 @@ integration, paint tools, legendary discoveries and per-save persistence.
   reference its `BepInEx/core` and generated `BepInEx/interop` assemblies.
 - GNU Make, Bash and standard Unix utilities, including `sha256sum`.
 
-Mod Companion **1.0.3** and AssetsTools.NET **3.0.5** are pinned in `dependencies/`, with its checksum, license
+Mod Companion **1.0.3** is pinned in `dependencies/`, with its checksum, license
 and provenance. No sibling checkout, Python scripts or external research tools
-are needed. Game assemblies and extracted game assets must not be committed.
+are needed. Game assemblies must not be committed. The checked-in chest mesh/texture is embedded in HOBA.
 
 ## Build and validate
 
@@ -23,7 +23,6 @@ export NIVALIS_GAME_PATH="/path/to/Nivalis Nights"
 make build
 make test
 make test-config
-make check-game-assets
 make package
 ```
 
@@ -38,7 +37,6 @@ cache live under ignored `.tools/`.
 | `build` | Verify the pinned dependency and compile against the installed game |
 | `test` | Managed behavior, geometry, deformation, paint, product and persistence checks |
 | `test-config` | Real BepInEx configuration round-trip checks in temporary files |
-| `check-game-assets` | Verify chest asset ranges and compare fallback geometry/texture against the fast path |
 | `package` | Build, run managed/configuration checks and create the release ZIP |
 | `install` | Build, run managed checks and replace HOBA and its dependencies in the local game |
 | `model` / `catalog` | Export OBJ/MTL geometry under `bin/models/` |
@@ -61,9 +59,9 @@ not measure GPU cost.
 | `src/BoardItem.cs`, `BoardProducts.cs`, `BoardShop.cs`, `VendorController.cs` | Native inventory, product registration and dealer integration |
 | `src/Spray*`, `Paint*` | Held spray-can model, hand pose and consumable paint transaction |
 | `src/WorldPlacements.cs`, `HiddenChests.cs`, `LegendaryCompass.cs` | Authored placements, interaction and discovery markers |
-| `src/NativeChestAsset.cs`, `NativeChestResolver.cs`, `ChestVisual.cs` | Verified reads of chest assets from the installed game |
+| `src/NativeChestAsset.cs`, `ChestVisual.cs` | Embedded chest resource loading and rendering |
 | `src/HobaSave.cs`, `HobaCheckpoint*` | Save hooks and versioned companion state |
-| `assets/` | Embedded inventory PNGs and Unity type metadata; source geometry lives in C# |
+| `assets/` | Embedded inventory PNGs and chest mesh/texture; board geometry lives in C# |
 | `dependencies/` | Pinned managed dependencies, checksums and licenses |
 | `tests/` | Automated managed regression checks and optional model exporters |
 | `tools/` | Configuration checks, shell packaging and SDK ZIP task |
@@ -81,9 +79,9 @@ not measure GPU cost.
   per-vertex loops. See [models](docs/models.md).
 - Inventory thumbnails are checked-in PNGs. Palette and geometry changes do not
   regenerate them; review/update the icons separately when needed.
-- Native chest descriptors target Steam build **25738165**. Validate addresses,
-  layouts and transforms before changing hashes for another build. See
-  [native assets](docs/native-assets.md).
+- The chest mesh and texture are embedded and independent of game asset locations.
+  Preserve the placement pivot when changing them. See
+  [embedded chest](docs/native-assets.md).
 - Avoid native by-reference struct detours such as Cinemachine `CameraState`;
   these have caused IL2CPP crashes. Prefer the established controller hooks.
 
@@ -95,11 +93,9 @@ Output is `bin/Nivalis.Hoba-VERSION.zip` plus its SHA-256 file. The ZIP contains
 ```text
 BepInEx/plugins/Nivalis.Hoba.dll
 BepInEx/plugins/Nivalis.ModCompanion.dll
-BepInEx/plugins/AssetsTools.NET.dll
-BepInEx/plugins/AssetsTools.NET.LICENSE
 ```
 
-Settings, saves, debug symbols, research files and game assets are excluded.
+Settings, saves, debug symbols, research files and loose game assets are excluded.
 Update the Companion DLL, checksum, provenance and minimum dependency declaration
 together when changing its version. All mods share the root-level Companion DLL;
 check compatibility before using `make install` in a development installation.

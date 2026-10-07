@@ -32,10 +32,6 @@ package: build test test-config
 clean:
 	@bash tools/artifacts.sh clean
 
-.PHONY: check-game-assets
-check-game-assets: check-sdk check-game
-	@"$$DOTNET" run --project tests/Checks.csproj -c "$$CONFIGURATION" -- --check-game-assets "$$GAME_PATH/Nivalis Nights_Data"
-
 .PHONY: test-config
 test-config: check-sdk check-game
 	@"$$DOTNET" run --project tools/ConfigChecks/ConfigChecks.csproj -c "$$CONFIGURATION" "-p:GamePath=$$(cd "$$GAME_PATH" && pwd)"

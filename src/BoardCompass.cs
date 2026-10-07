@@ -1,3 +1,4 @@
+using BepInEx.Configuration;
 using HarmonyLib;
 using Nivalis.Navigation;
 using Nivalis.UI;
@@ -17,9 +18,14 @@ internal sealed class BoardCompass : IDisposable
     private readonly GameObject _marker;
     private bool _parked;
 
-    internal static void Configure(SettingsCategory discovery) => _show = discovery.Toggle(
-        "ShowParkedHobaOnCompass", "Show parked HOBA on compass", true,
-        "Mark your parked hoverboard on the compass while you are in the same area. Hidden while riding.");
+    internal static void Configure(SettingsCategory general, ConfigFile config)
+    {
+        const string key = "ShowParkedHobaOnCompass";
+        const string description = "Mark your parked hoverboard on the compass while you are in the same area. Hidden while riding.";
+        // Preserve the existing config key while displaying this setting in General.
+        _show = general.BindToggle(key, "Show parked HOBA on compass",
+            config.Bind("Discovery", key, true, description), description);
+    }
 
     internal BoardCompass(Transform parent, Sprite icon)
     {

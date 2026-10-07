@@ -1,47 +1,32 @@
 using System.Numerics;
+using System.Security.Cryptography;
 using NivalisMods.Hoba;
 
 internal static class NativeChestChecks
 {
-    internal static void Run(string directory)
+    internal static void Run()
     {
-        var fast = NativeChestAsset.ReadKnown(directory);
-        var notices = new List<string>();
-        var watch = System.Diagnostics.Stopwatch.StartNew();
-        var recovered = NativeChestAsset.Load(directory,
-            _ => throw new InvalidDataException("Simulated stale game-build addresses"), notices.Add);
-        Console.WriteLine($"Native chest fallback resolved in {watch.ElapsedMilliseconds} ms.");
-        Require(notices.Count == 1, "Fallback reports recovery once");
-        Require(fast.Triangles.SequenceEqual(recovered.Triangles), "Fallback triangle order matches known mesh");
-        Require(fast.Texture.SequenceEqual(recovered.Texture), "Fallback texture matches verified texture");
-        Require(fast.Vertices.Length == recovered.Vertices.Length, "Fallback vertex count matches");
-        for (var i = 0; i < fast.Vertices.Length; i++)
-        {
-            Require(Vector3.Distance(fast.Vertices[i], recovered.Vertices[i]) < .0001f, "Fallback preserves vertex/pivot " + i);
-            Require(Vector2.Distance(fast.UV[i], recovered.UV[i]) < .00001f, "Fallback UV matches " + i);
-        }
-        NativeChestResolver.Validate(recovered);
-        Require(ReferenceEquals(NativeChestAsset.Read(directory), NativeChestAsset.Read(directory)), "Session reuses chest data");
-        var unexpectedFallback = false;
-        Require(ReferenceEquals(fast, NativeChestAsset.Load(directory, _ => fast, _ => unexpectedFallback = true)) &&
-            !unexpectedFallback, "Successful fast path does not resolve or log");
-        Reject(() => NativeChestResolver.Validate(recovered with { Texture = Array.Empty<byte>() }));
-        Reject(() => NativeChestResolver.Validate(recovered with { Triangles = new[] { 0, 1, recovered.Vertices.Length } }));
-        Reject(() => NativeChestResolver.Validate(recovered with { Vertices = recovered.Vertices.Select(v => v + Vector3.One).ToArray() }));
-        Reject(() => NativeChestResolver.Validate(recovered with { UV = recovered.UV.Select(_ => new Vector2(float.NaN,0)).ToArray() }));
-        var missing = Path.Combine(Path.GetTempPath(), "hoba-missing-assets-" + Guid.NewGuid());
-        Exception? first = null, second = null;
-        try { NativeChestAsset.Read(missing); } catch (Exception e) { first = e; }
-        try { NativeChestAsset.Read(missing); } catch (Exception e) { second = e; }
-        Require(first != null && ReferenceEquals(first, second), "Session caches failed resolution without retrying");
-        Console.WriteLine("Native chest fallback: stale-address recovery, geometry/UV/texture parity, validation and session cache checks passed.");
+        using var stream = typeof(NativeChestAsset).Assembly.GetManifestResourceStream("Hoba.HiddenChest")!;
+        Require(Convert.ToHexString(SHA256.HashData(stream)) ==
+            "4351BA16FB5667EFE15C0A8E4C61F19311D836648B426FA2176E650ECE6CFFEE",
+            "Embedded chest matches the verified source export");
+        var data = NativeChestAsset.Read();
+        Require(ReferenceEquals(data, NativeChestAsset.Read()), "Session reuses chest data");
+        Require(data.Vertices.Length == 144 && data.UV.Length == 144 && data.Triangles.Length == 276,
+            "Complete chest mesh and lids are present");
+        Require(data.Vertices.All(v => float.IsFinite(v.X) && float.IsFinite(v.Y) && float.IsFinite(v.Z)) &&
+            data.UV.All(v => float.IsFinite(v.X) && float.IsFinite(v.Y)) &&
+            data.Triangles.All(i => i >= 0 && i < data.Vertices.Length), "Valid geometry and UV values");
+        var min = data.Vertices.Aggregate(Vector3.Min);
+        var max = data.Vertices.Aggregate(Vector3.Max);
+        Require(Vector3.Distance((min + max) / 2, new(-.04579527f, .01374945f, .010190487f)) < .001f &&
+            (max - min).Length() is > .5f and < 2f, "Chest retains the existing placement pivot and size");
+        Require(data.Texture.Length == 174776 && Convert.ToHexString(SHA256.HashData(data.Texture)) ==
+            "D457D310FC141F3550E16986A05E80D0384E8E860D7594A47E736111B96C19C6",
+            "Complete original DXT1 texture and mipmaps are present");
+        Console.WriteLine("Embedded chest: source checksum, geometry, UVs, placement pivot, texture and session cache checks passed.");
     }
 
-    private static void Reject(Action action)
-    {
-        try { action(); } catch (InvalidDataException) { return; }
-        throw new Exception("Invalid native chest data was accepted.");
-    }
     private static void Require(bool condition, string message)
     {
         if (!condition) throw new Exception(message);

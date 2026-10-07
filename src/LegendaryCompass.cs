@@ -1,3 +1,4 @@
+using BepInEx.Configuration;
 using NivalisMods.ModCompanion.Api;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
@@ -16,8 +17,14 @@ internal static class LegendaryCompass
     private static NavigationPipDisplayData? _display;
     private static Texture2D? _texture;
     private static Sprite? _sprite;
-    internal static void Configure(SettingsCategory discovery) => _show = discovery.Toggle("ShowLegendariesOnCompass", "Show legendaries on compass", false,
-        "Show unsearched legendary chests in the current area as question marks on the compass.");
+    internal static void Configure(SettingsCategory general, ConfigFile config)
+    {
+        const string key = "ShowLegendariesOnCompass";
+        const string description = "Show unsearched legendary chests in the current area as question marks on the compass.";
+        // Preserve the existing config key while displaying this setting in General.
+        _show = general.BindToggle(key, "Show legendaries on compass",
+            config.Bind("Discovery", key, false, description), description);
+    }
     internal static bool Visible(string id) => _show.Value && !HobaSave.State.Discoveries.ContainsKey(id);
 
     internal static GameObject Create(Transform parent)

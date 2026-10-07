@@ -441,16 +441,7 @@ ModelChecks.Run(args.Length == 2 && args[0] == "--export-catalog" ? args[1] : nu
 
 ProductChecks.Run();
 
-if (args.Length == 2 && args[0] == "--check-game-assets")
-{
-    var native = NativeChestAsset.ReadKnown(args[1]);
-    NativeChestChecks.Run(args[1]);
-    Check(native.Triangles.Length == 276 && native.Vertices.Length > 0, "Native chest source indices resolve");
-    var min = native.Vertices.Aggregate(System.Numerics.Vector3.Min);
-    var max = native.Vertices.Aggregate(System.Numerics.Vector3.Max);
-    Check(System.Numerics.Vector3.Distance((min + max) / 2, new(-.04579527f, .01374945f, .010190487f)) < .001f, "Native chest retains original placement pivot");
-    Console.WriteLine("Installed-game chest ranges, hashes and geometry verified.");
-}
+NativeChestChecks.Run();
 
 var fov = new SpeedFov();
 Near(fov.Step(0, 10, .02f), 0, .0001f, "Stationary board adds no FOV");
