@@ -11,7 +11,7 @@ namespace NivalisMods.Hoba;
 public sealed class Plugin : BasePlugin
 {
     public const string Id = "local.nivalis.hoba";
-    public const string Version = "1.0.1";
+    public const string Version = "1.0.2";
     internal static ManualLogSource Logger = null!;
     private Harmony? _patches;
 

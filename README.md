@@ -81,7 +81,7 @@ not measure GPU cost.
   per-vertex loops. See [models](docs/models.md).
 - Inventory thumbnails are checked-in PNGs. Palette and geometry changes do not
   regenerate them; review/update the icons separately when needed.
-- Native chest descriptors target Steam build **25726588**. Validate addresses,
+- Native chest descriptors target Steam build **25738165**. Validate addresses,
   layouts and transforms before changing hashes for another build. See
   [native assets](docs/native-assets.md).
 - Avoid native by-reference struct detours such as Cinemachine `CameraState`;

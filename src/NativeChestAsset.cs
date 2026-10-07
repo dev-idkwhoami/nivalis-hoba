@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace NivalisMods.Hoba;
 
-// Fast-path addresses for Steam build 25726588. Game bytes are never shipped.
+// Fast-path addresses for Steam build 25738165. Game bytes are never shipped.
 internal static class NativeChestAsset
 {
     internal sealed record Data(Vector3[] Vertices, Vector2[] UV, int[] Triangles, byte[] Texture);
@@ -34,13 +34,14 @@ internal static class NativeChestAsset
 
     internal static Data ReadKnown(string dataDirectory)
     {
-        var vertices = ReadRange(dataDirectory, "level2.resS", 213137968, 2460920,
-            "23A8509C65F6EBE93AFB4E40945FA4CE69EAED3C3EFFEA9038306522764DECE1");
+        // Carboard_Box_Light_C_Open (15370), combined mesh 164.
+        var vertices = ReadRange(dataDirectory, "level2", 32929144, 301920,
+            "91B8901BF685B86C0DC00C4560BCDB68A870D3767A0BADED5FA072CF4A5C269B");
         var triangles = new List<int>();
         foreach (var (offset, count, hash) in new[] {
-            (32516212L, 204, "598B1D012DFFCC7F729D41B25D362AAA6C58EC56C2D1245876831F5DEEB8D051"),
-            (32514004L, 36, "E98316B3E502D4E01A5F2D3A6405B25483EE98AE5BCD2F035B56FB524BB9915E"),
-            (32514148L, 36, "F39FC4A2D2E17E33BD23CC0DCA9616614030DA808812C166B92D4BE86552E6C9") })
+            (32907044L, 204, "598B1D012DFFCC7F729D41B25D362AAA6C58EC56C2D1245876831F5DEEB8D051"),
+            (32904836L, 36, "E98316B3E502D4E01A5F2D3A6405B25483EE98AE5BCD2F035B56FB524BB9915E"),
+            (32904980L, 36, "F39FC4A2D2E17E33BD23CC0DCA9616614030DA808812C166B92D4BE86552E6C9") })
         {
             var indices = ReadRange(dataDirectory, "level2", offset, count * 2, hash);
             for (var i = 0; i < count; i++) triangles.Add(BitConverter.ToUInt16(indices, i * 2));
@@ -61,7 +62,7 @@ internal static class NativeChestAsset
                     Vector3.Dot(p, new(-.96592595f, .000005532489145f, .258818584f)),
                     Vector3.Dot(p, new(-.258818565f, .000000005352723f, -.965925955f)));
                 index = positions.Count; mapping.Add(original, index); positions.Add(local);
-                uv.Add(new((float)BitConverter.UInt16BitsToHalf(BitConverter.ToUInt16(vertices, offset + 28)), (float)BitConverter.UInt16BitsToHalf(BitConverter.ToUInt16(vertices, offset + 30))));
+                uv.Add(new(BitConverter.ToSingle(vertices, offset + 24), BitConverter.ToSingle(vertices, offset + 28)));
             }
             triangles[i] = index;
         }

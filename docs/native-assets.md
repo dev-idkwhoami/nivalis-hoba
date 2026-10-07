@@ -6,12 +6,15 @@ no game mesh or texture bytes are distributed or written to disk.
 
 ## Known-address fast path
 
-`NativeChestAsset.ReadKnown` targets Steam build **25726588**. It reads the box's
-three static-batch index ranges from `level2`, the vertex stream from `level2.resS`,
-and the DXT1 texture with mipmaps from `sharedassets0.assets.resS`. Each range is
-SHA-256 checked. The vertex stride is 40 bytes: float32 position at offset 0 and
-float16 UV0 at offset 28. This update moved vertices out of the scene file and
-changed their layout, so changing offsets alone would have been insufficient.
+`NativeChestAsset.ReadKnown` targets Steam build **25738165**. The source was
+resolved by name as `Detail_Objects_Foreground/Carboard_Box_Light_C_Open`, object
+**15370**, using combined mesh **164**. It reads the box's three static-batch
+index ranges and inline vertex buffer from `level2`, and the DXT1 texture with
+mipmaps from `sharedassets0.assets.resS`. Each range is SHA-256 checked.
+The vertex stride is 40 bytes: float32 position at offset 0 and float32 UV0 at
+offset 24. Compared with build 25726588, vertices moved back into the scene
+file and UVs changed from float16 to float32. The source transform, index bytes
+and texture remain unchanged.
 
 The source transform is undone, then the saved bottom-centre offset is applied by
 `ChestVisual`. Existing placements, interaction ranges and saved discovery IDs
