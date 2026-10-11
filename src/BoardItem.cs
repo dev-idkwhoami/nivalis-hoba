@@ -255,18 +255,6 @@ internal static class BoardInventoryUse
         return false;
     }
 }
-[HarmonyPatch(typeof(InventoryItemDetailsDisplay), nameof(InventoryItemDetailsDisplay.OnHoldButtonClicked))]
-internal static class BoardDetailsUse
-{
-    private static bool Prefix(InventoryItemDetailsDisplay __instance)
-    {
-        if (!BoardItem.IsProduct(__instance.Stack?.Type)) { SprayTool.Unequip(); return true; }
-        try { BoardItem.QueueUse(__instance, __instance.Stack); }
-        catch (Exception e) { Plugin.Logger.LogError("HOBA item use: " + e); BoardItem.Notify("Could not use that item. See the HOBA log."); }
-        return false;
-    }
-}
-
 [HarmonyPatch(typeof(InventoriesManager), nameof(InventoriesManager.InitializeInternal))]
 internal static class BoardInventoryLoad
 {
@@ -284,15 +272,5 @@ internal static class BoardInventoryUseVisibility
         if (!BoardItem.IsProduct(__0?.Type) || __instance.holdButton == null) return;
         __instance.holdButton.gameObject.SetActive(BoardItem.IsOwnedStack(__0));
         // RefreshHoldButton already applied the native interactability restrictions.
-    }
-}
-
-[HarmonyPatch(typeof(InventoryItemDetailsDisplay), nameof(InventoryItemDetailsDisplay.Refresh))]
-internal static class BoardDetailsUseVisibility
-{
-    private static void Postfix(InventoryItemDetailsDisplay __instance)
-    {
-        if (!BoardItem.IsProduct(__instance.Stack?.Type) || __instance.holdButton == null) return;
-        __instance.holdButton.gameObject.SetActive(BoardItem.IsOwnedStack(__instance.Stack));
     }
 }

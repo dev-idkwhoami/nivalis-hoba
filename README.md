@@ -101,3 +101,9 @@ together when changing its version. All mods share the root-level Companion DLL;
 check compatibility before using `make install` in a development installation.
 
 There is no automatic commit, tag, push or publication step.
+
+## Update #4 compatibility
+
+Updated against regenerated bindings for game build 25828494. HOBA uses
+the native inventory-row use button; the removed inventory-details screen is
+no longer patched. Board riding, paints, shops and hidden chests are unchanged.
